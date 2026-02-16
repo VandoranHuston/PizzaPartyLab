@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.pizzaparty3.ui.theme.PizzaParty3Theme
 
 @Composable
-fun NumPeopleField(onValueChange: (String) -> Unit, numPeople: String = "", modifier: Modifier = Modifier) {
+fun NumPeopleField(onValueChange: (String) -> Unit, numPeople: String = "", pvm: PizzaPartyViewModel, modifier: Modifier = Modifier) {
     Toast.makeText(LocalContext.current, "NumPeopleField recomposed", Toast.LENGTH_SHORT).show()
     TextField(
         label = { Text("Enter number of people in your party:") },
@@ -27,6 +27,7 @@ fun NumPeopleField(onValueChange: (String) -> Unit, numPeople: String = "", modi
         onValueChange = onValueChange,
         modifier = modifier
     )
+    pvm.calculateNumPizzas()
 
 }
 
@@ -44,13 +45,13 @@ fun PizzaPartyScreen(pvm: PizzaPartyViewModel, modifier: Modifier = Modifier) {
 //    var numPeople by remember { mutableStateOf("") }
 //    var numPeople = ""
         NumPeopleField({Log.d("MainActivity", it)
-            pvm.numPeopleInput = it }, numPeople = pvm.numPeopleInput
+            pvm.numPeopleInput = it }, numPeople = pvm.numPeopleInput, pvm = pvm
         )
 
 //    var selectedOption by remember { mutableStateOf("Light") }
         //val isOptionSelected: (String)->Boolean = {pvm.selectedOption == it}
 
-        RadioButtonGroup({ pvm.selectedOption = "Light" }, onClickMedium = { pvm.selectedOption = "Medium" }, onClickRavenous = { pvm.selectedOption = "Ravenous" }, selectedOption = pvm.selectedOption, )
+        RadioButtonGroup({ pvm.selectedOption = "Light" }, onClickMedium = { pvm.selectedOption = "Medium" }, onClickRavenous = { pvm.selectedOption = "Ravenous" }, selectedOption = pvm.selectedOption, pvm = pvm)
 
 
         //   var totalPizzas =0
@@ -58,13 +59,13 @@ fun PizzaPartyScreen(pvm: PizzaPartyViewModel, modifier: Modifier = Modifier) {
 
         Text(text = "Total pizzas: ${pvm.totalPizzas}")
 
-        val context = LocalContext.current
-        Button(onClick = {
-            Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show()
-            pvm.calculateNumPizzas()
-        }){
-            Text(text = "Calculate")
-        }
+        //val context = LocalContext.current
+        //Button(onClick = {
+        //    Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show()
+        //    pvm.calculateNumPizzas()
+        //}){
+        //    Text(text = "Calculate")
+        //}
 
 
     }
@@ -72,7 +73,7 @@ fun PizzaPartyScreen(pvm: PizzaPartyViewModel, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RadioButtonGroup(onClickLight: ()->Unit, onClickMedium: ()->Unit, onClickRavenous: ()->Unit, selectedOption: String) {
+fun RadioButtonGroup(onClickLight: ()->Unit, onClickMedium: ()->Unit, onClickRavenous: ()->Unit, selectedOption: String, pvm: PizzaPartyViewModel) {
     Toast.makeText(LocalContext.current, "Radio button recomposed", Toast.LENGTH_SHORT).show()
     Text(text = "How hungry are they?")
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -90,6 +91,7 @@ fun RadioButtonGroup(onClickLight: ()->Unit, onClickMedium: ()->Unit, onClickRav
         )
         Text(text = "Ravenous")
     }
+    pvm.calculateNumPizzas()
 }
 
 @Preview(showBackground = true)
